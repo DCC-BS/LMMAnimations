@@ -41,7 +41,7 @@ export class WordPrediction extends Node {
 
     // Create refs for the elements we'll need to animate
     public readonly wordTextRef = createRef<Txt>();
-    public readonly probBarRef = createRef<Rect>();
+    private readonly probBarRef = createRef<Rect>();
     public readonly percentTextRef = createRef<Txt>();
     public readonly layout = createRef<Layout>();
 
@@ -65,27 +65,19 @@ export class WordPrediction extends Node {
                     ref={this.wordTextRef}
                     text={() => this.word()}
                     fontSize={30}
-                    fill="#ffffff"
+                    fill="black"
                     fontWeight={500}
-                    width={120}
-                />
-
-                {/* Probability bar background */}
-                <Rect
-                    width={() => this.maxBarWidth()}
-                    height={30}
-                    fill="#333333"
-                    radius={5}
+                    width={300}
                 />
 
                 {/* Actual probability bar with initial width of 0 */}
                 <Rect
                     ref={this.probBarRef}
-                    width={0}
+                    width={() => this.getBarWidth() * this.probability()}
                     height={30}
                     fill={() => this.isHighest() ? "#4CAF50" : "#2196F3"} // Green for highest prob, blue for others
                     radius={5}
-                    position={() => ({ x: -this.maxBarWidth() / 2, y: 0 })}
+                    // position={() => ({ x: -this.maxBarWidth() / 2, y: 0 })}
                     opacity={0.8}
                 />
 
@@ -94,7 +86,7 @@ export class WordPrediction extends Node {
                     ref={this.percentTextRef}
                     text={() => `${(this.probability() * 100).toFixed(1)}%`}
                     fontSize={24}
-                    fill="#ffffff"
+                    fill="black"
                     fontWeight={500}
                     opacity={0}
                 />
@@ -104,6 +96,6 @@ export class WordPrediction extends Node {
 
     // Helper method to get bar width based on probability
     public getBarWidth(): number {
-        return this.probability() * this.maxBarWidth();
+        return this.maxBarWidth();
     }
 }
